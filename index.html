@@ -40,7 +40,6 @@
             color: var(--text-main);
         }
 
-        /* Animación RGB fluida para las estrellas */
         @keyframes rgbCycle {
             0% {
                 filter: hue-rotate(0deg) drop-shadow(0 0 6px #00f3ff) drop-shadow(0 0 12px #0066ff);
@@ -62,6 +61,37 @@
             }
         }
 
+        @keyframes victoryCardRgbFlash {
+            0% {
+                border-color: #ff0055;
+                box-shadow: 0 0 40px #ff0055, inset 0 0 35px rgba(255, 0, 85, 0.45);
+            }
+            16% {
+                border-color: #ff8800;
+                box-shadow: 0 0 14px #ff8800, inset 0 0 10px rgba(255, 136, 0, 0.15);
+            }
+            33% {
+                border-color: #ffee00;
+                box-shadow: 0 0 42px #ffee00, inset 0 0 35px rgba(255, 238, 0, 0.45);
+            }
+            50% {
+                border-color: #00ff88;
+                box-shadow: 0 0 14px #00ff88, inset 0 0 10px rgba(0, 255, 136, 0.15);
+            }
+            66% {
+                border-color: #00f3ff;
+                box-shadow: 0 0 45px #00f3ff, inset 0 0 38px rgba(0, 243, 255, 0.5);
+            }
+            83% {
+                border-color: #aa00ff;
+                box-shadow: 0 0 14px #aa00ff, inset 0 0 10px rgba(170, 0, 255, 0.15);
+            }
+            100% {
+                border-color: #ff0055;
+                box-shadow: 0 0 40px #ff0055, inset 0 0 35px rgba(255, 0, 85, 0.45);
+            }
+        }
+
         .card {
             background: var(--panel-bg);
             padding: 30px;
@@ -72,9 +102,14 @@
             max-width: 820px;
             width: 100%;
             text-align: center;
-            border: 1px solid var(--neon-cyan);
+            border: 2px solid var(--neon-cyan);
             position: relative;
             backdrop-filter: blur(6px);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card.victory-rgb-flash {
+            animation: victoryCardRgbFlash 0.65s linear infinite;
         }
 
         .card::before, .card::after {
@@ -98,7 +133,6 @@
             border-top: none;
         }
 
-        /* Barra superior global para control de audio */
         .top-audio-bar {
             display: flex;
             justify-content: flex-end;
@@ -130,7 +164,6 @@
             box-shadow: 0 0 10px rgba(255, 106, 0, 0.25);
         }
 
-        /* Pantalla de Inicio */
         #pantalla-inicio h1 {
             font-family: 'Orbitron', sans-serif;
             font-weight: 900;
@@ -241,7 +274,6 @@
             box-shadow: 0 0 28px var(--neon-cyan);
         }
 
-        /* Pantalla de Juego */
         #pantalla-juego {
             display: none;
         }
@@ -257,7 +289,6 @@
             padding-bottom: 14px;
         }
 
-        /* Botón secreto camuflado en el título HUD */
         #secret-grid-trigger {
             font-family: 'Orbitron', sans-serif;
             font-size: 14px;
@@ -295,7 +326,7 @@
             flex-wrap: wrap;
         }
 
-        select, .btn-action, .btn-secondary, .btn-next {
+        select, .btn-action, .btn-secondary, .btn-next, .btn-danger {
             font-family: 'Orbitron', sans-serif;
             padding: 9px 14px;
             font-size: 12px;
@@ -331,6 +362,19 @@
             box-shadow: 0 0 15px rgba(255, 106, 0, 0.6);
         }
 
+        .btn-danger {
+            border-color: var(--neon-red);
+            color: var(--neon-red);
+            font-size: 10px;
+            padding: 6px 10px;
+        }
+
+        .btn-danger:hover {
+            background-color: var(--neon-red);
+            color: #ffffff;
+            box-shadow: 0 0 14px rgba(255, 30, 86, 0.65);
+        }
+
         .btn-next {
             display: none;
             border-color: var(--neon-green);
@@ -353,7 +397,6 @@
             box-shadow: none;
         }
 
-        /* Tablero The Grid */
         .board {
             display: flex;
             justify-content: space-around;
@@ -429,7 +472,6 @@
             text-shadow: 0 0 8px rgba(0, 243, 255, 0.7);
         }
 
-        /* Estrellas RGB de Energía */
         .star-piece {
             display: flex;
             align-items: center;
@@ -487,13 +529,22 @@
             padding-top: 15px;
         }
 
-        .ranking-container h3 {
+        .ranking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .ranking-header h3 {
             font-family: 'Orbitron', sans-serif;
             color: var(--neon-orange);
             font-size: 14px;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 12px;
+            margin: 0;
             text-shadow: 0 0 8px rgba(255, 106, 0, 0.5);
         }
 
@@ -521,14 +572,86 @@
         tr:hover td {
             background-color: rgba(0, 243, 255, 0.05);
         }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(1, 5, 12, 0.85);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background: #041020;
+            border: 2px solid var(--neon-red);
+            box-shadow: 0 0 30px rgba(255, 30, 86, 0.45), inset 0 0 18px rgba(255, 30, 86, 0.2);
+            padding: 26px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .modal-box h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-red);
+            letter-spacing: 2px;
+            margin: 0 0 10px 0;
+            font-size: 15px;
+            text-transform: uppercase;
+        }
+
+        .modal-box p {
+            font-size: 13px;
+            color: var(--text-main);
+            margin-bottom: 16px;
+        }
+
+        .modal-box input {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+            letter-spacing: 6px;
+            text-align: center;
+            width: 180px;
+            padding: 10px;
+            background: #020812;
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            outline: none;
+            margin-bottom: 12px;
+        }
+
+        .modal-box input:focus {
+            border-color: var(--neon-red);
+            box-shadow: 0 0 14px rgba(255, 30, 86, 0.5);
+        }
+
+        #pin-error-msg {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            color: var(--neon-red);
+            min-height: 16px;
+            margin-bottom: 14px;
+            letter-spacing: 1px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Pista de audio de fondo -->
+    <!-- Pista de audio de fondo y efecto de victoria -->
     <audio id="bg-music" src="superbeat.mp3" loop preload="auto"></audio>
+    <audio id="win-sound" src="winprize.mp3" preload="auto"></audio>
 
-    <div class="card">
+    <div class="card" id="main-game-card">
         <div class="top-audio-bar">
             <button type="button" id="btn-toggle-music" class="btn-audio muted">🔇 MÚSICA: OFF</button>
         </div>
@@ -536,7 +659,7 @@
         <!-- ================= PANTALLA DE INICIO ================= -->
         <div id="pantalla-inicio">
             <h1>TORRES DE HANÓI</h1>
-            <p class="subtitle">STAR-RGB EDITION </p>
+            <p class="subtitle">// SYSTEM: THE GRID // STAR-RGB EDITION //</p>
 
             <div class="input-group">
                 <label for="input-nombre">IDENTIFICATE USUARIO:</label>
@@ -553,10 +676,13 @@
                 </ul>
             </div>
 
-            <button class="btn-modern" type="button" id="btn-iniciar">ENTRAR</button>
+            <button class="btn-modern" type="button" id="btn-iniciar">ENTRAR A LA RED</button>
 
             <div class="ranking-container">
-                <h3>&gt; REGISTRO DE PROGRAMAS ÉLITE</h3>
+                <div class="ranking-header">
+                    <h3>&gt; REGISTRO DE PROGRAMAS ÉLITE</h3>
+                    <button type="button" class="btn-danger btn-open-clear-pin">BORRAR MARCADORES</button>
+                </div>
                 <table>
                     <thead>
                         <tr>
@@ -610,7 +736,10 @@
             <div id="status-message">SELECCIONA UN NODO DE ORIGEN PARA INICIAR SECUENCIA.</div>
 
             <div class="ranking-container">
-                <h3>&gt; REGISTRO DE PROGRAMAS ÉLITE</h3>
+                <div class="ranking-header">
+                    <h3>&gt; REGISTRO DE PROGRAMAS ÉLITE</h3>
+                    <button type="button" class="btn-danger btn-open-clear-pin">BORRAR MARCADORES</button>
+                </div>
                 <table>
                     <thead>
                         <tr>
@@ -626,9 +755,24 @@
         </div>
     </div>
 
+    <!-- Modal de confirmación con PIN 0122 -->
+    <div class="modal-overlay" id="pin-modal">
+        <div class="modal-box">
+            <h4>// AUTORIZACIÓN REQUERIDA //</h4>
+            <p>INGRESA EL PIN DE SEGURIDAD PARA PURGAR TODOS LOS MARCADORES:</p>
+            <input type="password" id="input-pin-code" maxlength="4" inputmode="numeric" placeholder="****">
+            <div id="pin-error-msg"></div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="btn-cancel-pin">CANCELAR</button>
+                <button type="button" class="btn-danger" id="btn-confirm-pin" style="padding: 9px 16px; font-size: 12px;">CONFIRMAR</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const NIVEL_MINIMO = 3;
         const NIVEL_MAXIMO = 10;
+        const PIN_BORRADO = "0122";
 
         let torres = [[], [], []];
         let historialMovimientos = [];
@@ -647,6 +791,7 @@
             cargarRanking();
 
             const bgMusic = document.getElementById("bg-music");
+            const winSound = document.getElementById("win-sound");
             const btnMusic = document.getElementById("btn-toggle-music");
 
             function actualizarBotonAudio() {
@@ -666,9 +811,49 @@
                     bgMusic.play().then(actualizarBotonAudio).catch(() => {});
                 } else {
                     bgMusic.pause();
+                    winSound.pause();
+                    winSound.currentTime = 0;
                     musicaSilenciadaManualmente = true;
                     actualizarBotonAudio();
                 }
+            });
+
+            const pinModal = document.getElementById("pin-modal");
+            const inputPin = document.getElementById("input-pin-code");
+            const pinError = document.getElementById("pin-error-msg");
+
+            document.querySelectorAll(".btn-open-clear-pin").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    inputPin.value = "";
+                    pinError.textContent = "";
+                    pinModal.style.display = "flex";
+                    setTimeout(() => inputPin.focus(), 50);
+                });
+            });
+
+            document.getElementById("btn-cancel-pin").addEventListener("click", () => {
+                pinModal.style.display = "none";
+            });
+
+            function validarYBorrarMarcadores() {
+                if (inputPin.value.trim() === PIN_BORRADO) {
+                    localStorage.removeItem("hanoi_ranking");
+                    cargarRanking();
+                    pinModal.style.display = "none";
+                    if (document.getElementById("pantalla-juego").style.display === "block") {
+                        mostrarMensaje("BASE DE DATOS DE MARCADORES PURGADA.", false, "#ff6a00");
+                    }
+                } else {
+                    pinError.textContent = "ACCESO DENEGADO: PIN INCORRECTO";
+                    inputPin.value = "";
+                    inputPin.focus();
+                }
+            }
+
+            document.getElementById("btn-confirm-pin").addEventListener("click", validarYBorrarMarcadores);
+            inputPin.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") validarYBorrarMarcadores();
+                else if (e.key === "Escape") pinModal.style.display = "none";
             });
 
             document.getElementById("btn-iniciar").addEventListener("click", iniciarJuego);
@@ -684,7 +869,6 @@
                 reiniciarPartida();
             });
 
-            // BOTÓN SECRETO: Doble clic en el título HUD "TORRES DE HANÓI"
             document.getElementById("secret-grid-trigger").addEventListener("dblclick", activarAutoCompletadoSecreto);
 
             document.getElementById("input-nombre").addEventListener("keydown", (e) => {
@@ -700,6 +884,7 @@
             });
 
             document.addEventListener("keydown", (e) => {
+                if (pinModal.style.display === "flex") return;
                 if (document.getElementById("pantalla-juego").style.display !== "block" || autoResolviendo) return;
                 const key = e.key.toLowerCase();
                 if (key === "1" || key === "a") manejarClicTorre(0);
@@ -708,6 +893,30 @@
                 else if (key === "z" && (e.ctrlKey || e.metaKey)) deshacerMovimiento();
             });
         });
+
+        function reproducirSonidoVictoria() {
+            const winSound = document.getElementById("win-sound");
+            if (winSound && !musicaSilenciadaManualmente) {
+                winSound.pause();
+                winSound.currentTime = 0;
+                winSound.play().catch(() => {});
+            }
+        }
+
+        function detenerSonidoVictoria() {
+            const winSound = document.getElementById("win-sound");
+            if (winSound) {
+                winSound.pause();
+                winSound.currentTime = 0;
+            }
+        }
+
+        function activarParpadeoVictoria(activo) {
+            const card = document.getElementById("main-game-card");
+            if (card) {
+                card.classList.toggle("victory-rgb-flash", activo);
+            }
+        }
 
         function actualizarSelectorNiveles() {
             const select = document.getElementById("disk-count");
@@ -737,7 +946,6 @@
             nombreJugador = (input && input.value.trim() !== "") ? input.value.trim().toUpperCase() : "PROGRAMA_01";
             document.getElementById("lbl-jugador").innerText = nombreJugador;
 
-            // Iniciar superbeat.mp3 al entrar a la red (si el usuario no la pausó manualmente)
             const bgMusic = document.getElementById("bg-music");
             const btnMusic = document.getElementById("btn-toggle-music");
             if (bgMusic && bgMusic.paused && !musicaSilenciadaManualmente) {
@@ -756,6 +964,8 @@
 
         function volverInicio() {
             detenerAutoResolucion();
+            activarParpadeoVictoria(false);
+            detenerSonidoVictoria();
             document.getElementById("pantalla-juego").style.display = "none";
             document.getElementById("pantalla-inicio").style.display = "block";
             cargarRanking();
@@ -772,6 +982,9 @@
 
         function reiniciarPartida() {
             detenerAutoResolucion();
+            activarParpadeoVictoria(false);
+            detenerSonidoVictoria();
+
             const select = document.getElementById("disk-count");
             let elegido = parseInt(select.value);
             if (elegido > nivelDesbloqueado) {
@@ -850,6 +1063,9 @@
             
             if (torres[2].length === totalDiscos) {
                 juegoTerminado = true;
+                activarParpadeoVictoria(true);
+                reproducirSonidoVictoria();
+
                 const minMovs = Math.pow(2, totalDiscos) - 1;
                 let mensajeExtra = movimientos === minMovs ? " // EFICIENCIA 100%" : "";
 
