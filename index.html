@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TORRES DE HANÓI // THE GRID</title>
+    <title>TORRES DE HANÓI // THE GRID RGB</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-void: #02060d;
-            --panel-bg: rgba(5, 16, 30, 0.88);
+            --panel-bg: rgba(5, 16, 30, 0.9);
             --neon-cyan: #00f3ff;
             --neon-blue: #0066ff;
             --neon-orange: #ff6a00;
@@ -40,6 +40,28 @@
             color: var(--text-main);
         }
 
+        /* Animación RGB fluida para las estrellas */
+        @keyframes rgbCycle {
+            0% {
+                filter: hue-rotate(0deg) drop-shadow(0 0 6px #00f3ff) drop-shadow(0 0 12px #0066ff);
+            }
+            50% {
+                filter: hue-rotate(180deg) drop-shadow(0 0 8px #ff00aa) drop-shadow(0 0 14px #ff6a00);
+            }
+            100% {
+                filter: hue-rotate(360deg) drop-shadow(0 0 6px #00f3ff) drop-shadow(0 0 12px #0066ff);
+            }
+        }
+
+        @keyframes rgbSelected {
+            0% {
+                filter: hue-rotate(0deg) drop-shadow(0 0 10px #ffffff) drop-shadow(0 0 22px #00f3ff);
+            }
+            100% {
+                filter: hue-rotate(360deg) drop-shadow(0 0 10px #ffffff) drop-shadow(0 0 22px #ff00cc);
+            }
+        }
+
         .card {
             background: var(--panel-bg);
             padding: 30px;
@@ -47,7 +69,7 @@
             box-shadow: 
                 0 0 25px rgba(0, 243, 255, 0.2),
                 inset 0 0 20px rgba(0, 102, 255, 0.15);
-            max-width: 800px;
+            max-width: 820px;
             width: 100%;
             text-align: center;
             border: 1px solid var(--neon-cyan);
@@ -55,7 +77,6 @@
             backdrop-filter: blur(6px);
         }
 
-        /* Esquinas estilo HUD */
         .card::before, .card::after {
             content: '';
             position: absolute;
@@ -197,7 +218,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
             gap: 10px;
             border-bottom: 1px solid rgba(0, 243, 255, 0.25);
@@ -224,11 +245,11 @@
 
         .stats-bar {
             display: flex;
-            gap: 15px;
+            gap: 14px;
             background: rgba(0, 15, 30, 0.85);
             padding: 8px 14px;
             border: 1px solid rgba(0, 243, 255, 0.4);
-            font-size: 13px;
+            font-size: 12px;
             letter-spacing: 1px;
             flex-wrap: wrap;
         }
@@ -242,7 +263,7 @@
             flex-wrap: wrap;
         }
 
-        select, .btn-action, .btn-secondary {
+        select, .btn-action, .btn-secondary, .btn-next {
             font-family: 'Orbitron', sans-serif;
             padding: 9px 14px;
             font-size: 12px;
@@ -254,6 +275,11 @@
             outline: none;
             cursor: pointer;
             transition: all 0.2s ease;
+        }
+
+        select option:disabled {
+            color: #46617a;
+            background-color: #030a14;
         }
 
         select:hover, .btn-secondary:hover:not(:disabled) {
@@ -273,6 +299,21 @@
             box-shadow: 0 0 15px rgba(255, 106, 0, 0.6);
         }
 
+        .btn-next {
+            display: none;
+            border-color: var(--neon-green);
+            color: var(--bg-void);
+            background-color: var(--neon-green);
+            font-weight: 900;
+            box-shadow: 0 0 18px rgba(0, 255, 136, 0.6);
+        }
+
+        .btn-next:hover {
+            background-color: #ffffff;
+            border-color: #ffffff;
+            box-shadow: 0 0 24px #ffffff;
+        }
+
         button:disabled, select:disabled {
             border-color: #263849;
             color: #3d566e;
@@ -285,7 +326,7 @@
             display: flex;
             justify-content: space-around;
             align-items: flex-end;
-            height: 315px;
+            height: 365px;
             background: 
                 linear-gradient(rgba(0, 243, 255, 0.06) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 243, 255, 0.06) 1px, transparent 1px),
@@ -321,13 +362,12 @@
             background: linear-gradient(to top, rgba(255, 106, 0, 0.18), transparent);
         }
 
-        /* Eje de energía vertical */
         .tower-container::before {
             content: '';
             position: absolute;
             bottom: 0;
-            width: 6px;
-            height: 255px;
+            width: 5px;
+            height: 305px;
             background: #e0ffff;
             box-shadow: 
                 0 0 8px var(--neon-cyan),
@@ -357,30 +397,44 @@
             text-shadow: 0 0 8px rgba(0, 243, 255, 0.7);
         }
 
-        /* Discos de Identidad TRON */
-        .disk {
-            height: 20px;
-            border-radius: 3px;
+        /* Estrellas RGB de Energía */
+        .star-piece {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 11px;
-            margin-bottom: 3px;
-            background: rgba(2, 12, 24, 0.92);
-            transition: transform 0.18s ease, box-shadow 0.18s ease;
-            user-select: none;
             position: relative;
+            margin-bottom: -4px;
+            transition: transform 0.2s ease;
+            user-select: none;
+            animation: rgbCycle 4s linear infinite;
         }
 
-        .disk.selected {
-            transform: translateY(-24px);
-            border-color: #ffffff !important;
-            color: #ffffff !important;
-            box-shadow: 
-                0 0 15px #ffffff,
-                0 0 28px var(--neon-orange) !important;
+        .star-piece svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .star-piece .star-num {
+            position: absolute;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 10px;
+            color: #ffffff;
+            text-shadow: 0 0 4px #000000, 0 0 6px #000000;
+            pointer-events: none;
+            padding-top: 2px;
+        }
+
+        .star-piece.selected {
+            transform: translateY(-26px) scale(1.12);
+            animation: rgbSelected 1.4s linear infinite;
+            z-index: 10;
+        }
+
+        .star-piece.selected svg polygon {
+            stroke: #ffffff;
+            stroke-width: 5;
         }
 
         #status-message {
@@ -443,7 +497,7 @@
         <!-- ================= PANTALLA DE INICIO ================= -->
         <div id="pantalla-inicio">
             <h1>TORRES DE HANÓI</h1>
-            <p class="subtitle">// SYSTEM: THE GRID //</p>
+            <p class="subtitle">// SYSTEM: THE GRID // STAR-RGB EDITION //</p>
 
             <div class="input-group">
                 <label for="input-nombre">IDENTIFICACIÓN DE PROGRAMA:</label>
@@ -453,9 +507,9 @@
             <div class="rules-card">
                 <h3>&gt; DIRECTIVAS DEL SISTEMA:</h3>
                 <ul>
-                    <li>Transfiere toda la pila desde el <strong>NODO A</strong> hacia el <strong>NODO C</strong>.</li>
-                    <li>Solo se permite desplazar <strong>un disco de datos a la vez</strong>.</li>
-                    <li>Prohibido apilar un disco mayor sobre uno de menor capacidad.</li>
+                    <li>Transfiere todas las <strong>Estrellas RGB</strong> desde el <strong>NODO A</strong> hacia el <strong>NODO C</strong>.</li>
+                    <li>Solo puedes mover <strong>una estrella a la vez</strong> y nunca colocar una mayor sobre una menor.</li>
+                    <li><strong>Progresión de Red:</strong> Comienzas en el Nivel 03; completa cada nivel para desbloquear el siguiente hasta llegar al Nivel 10.</li>
                     <li>Controles rápidos: teclas <strong>[1, 2, 3]</strong> o <strong>[A, B, C]</strong>.</li>
                 </ul>
             </div>
@@ -469,7 +523,7 @@
                         <tr>
                             <th>#</th>
                             <th>PROGRAMA</th>
-                            <th>DISCOS</th>
+                            <th>ESTRELLAS</th>
                             <th>CICLOS</th>
                         </tr>
                     </thead>
@@ -482,28 +536,21 @@
         <div id="pantalla-juego">
             <div class="game-header">
                 <button class="btn-secondary" type="button" id="btn-volver">&lt; SALIR</button>
-                <span id="secret-grid-trigger" title="TRON GRID v2.6">TORRES DE HANÓI</span>
+                <span id="secret-grid-trigger" title="TRON GRID v3.0">TORRES DE HANÓI</span>
                 <div class="stats-bar">
                     <div>USER: <span id="lbl-jugador" style="color: var(--neon-orange);"></span></div>
+                    <div>NIVEL: <span id="lbl-nivel-desbloqueado" style="color: var(--neon-cyan);">03/10</span></div>
                     <div>CICLOS: <span id="movimientos-count" style="color: #fff;">0</span></div>
                     <div>ÓPTIMO: <span id="min-movimientos" style="color: var(--neon-green);">7</span></div>
                 </div>
             </div>
 
             <div class="controls">
-                <label for="disk-count" style="font-size: 12px; letter-spacing: 1px; color: var(--neon-cyan);">DISCOS:</label>
-                <select id="disk-count">
-                    <option value="3" selected>03 DISCOS</option>
-                    <option value="4">04 DISCOS</option>
-                    <option value="5">05 DISCOS</option>
-                    <option value="6">06 DISCOS</option>
-                    <option value="7">07 DISCOS</option>
-                    <option value="8">08 DISCOS</option>
-                    <option value="9">09 DISCOS</option>
-                    <option value="10">10 DISCOS</option>
-                </select>
+                <label for="disk-count" style="font-size: 12px; letter-spacing: 1px; color: var(--neon-cyan);">NIVEL:</label>
+                <select id="disk-count"></select>
                 <button class="btn-secondary" type="button" id="btn-reiniciar">REINICIAR</button>
                 <button id="btn-deshacer" class="btn-action" type="button" disabled>&lt;&lt; DESHACER</button>
+                <button id="btn-siguiente-nivel" class="btn-next" type="button">SIGUIENTE NIVEL &gt;&gt;</button>
             </div>
 
             <div class="board">
@@ -530,7 +577,7 @@
                         <tr>
                             <th>#</th>
                             <th>PROGRAMA</th>
-                            <th>DISCOS</th>
+                            <th>ESTRELLAS</th>
                             <th>CICLOS</th>
                         </tr>
                     </thead>
@@ -541,23 +588,22 @@
     </div>
 
     <script>
+        const NIVEL_MINIMO = 3;
+        const NIVEL_MAXIMO = 10;
+
         let torres = [[], [], []];
         let historialMovimientos = [];
         let torreSeleccionada = -1;
         let totalDiscos = 3;
+        let nivelDesbloqueado = parseInt(localStorage.getItem("hanoi_tron_unlocked")) || NIVEL_MINIMO;
         let movimientos = 0;
         let nombreJugador = "PROGRAMA";
         let juegoTerminado = false;
         let autoResolviendo = false;
         let autoTimer = null;
 
-        // Paleta neón TRON para cada disco (borde + resplandor)
-        const estilosDiscos = [
-            "#00f3ff", "#00b8ff", "#0077ff", "#3d5afe", "#7c4dff",
-            "#00ff88", "#ffea00", "#ff9100", "#ff5500", "#ff1e56"
-        ];
-
         document.addEventListener("DOMContentLoaded", () => {
+            actualizarSelectorNiveles();
             cargarRanking();
 
             document.getElementById("btn-iniciar").addEventListener("click", iniciarJuego);
@@ -565,6 +611,13 @@
             document.getElementById("btn-reiniciar").addEventListener("click", reiniciarPartida);
             document.getElementById("btn-deshacer").addEventListener("click", deshacerMovimiento);
             document.getElementById("disk-count").addEventListener("change", reiniciarPartida);
+
+            document.getElementById("btn-siguiente-nivel").addEventListener("click", () => {
+                const select = document.getElementById("disk-count");
+                const siguiente = Math.min(NIVEL_MAXIMO, totalDiscos + 1);
+                select.value = siguiente;
+                reiniciarPartida();
+            });
 
             // BOTÓN SECRETO: Doble clic en el título HUD "TORRES DE HANÓI"
             document.getElementById("secret-grid-trigger").addEventListener("dblclick", activarAutoCompletadoSecreto);
@@ -591,6 +644,29 @@
             });
         });
 
+        function actualizarSelectorNiveles() {
+            const select = document.getElementById("disk-count");
+            const valorPrevio = parseInt(select.value) || Math.min(nivelDesbloqueado, NIVEL_MAXIMO);
+            select.innerHTML = "";
+
+            for (let n = NIVEL_MINIMO; n <= NIVEL_MAXIMO; n++) {
+                const option = document.createElement("option");
+                option.value = n;
+                const etiquetaNum = n < 10 ? `0${n}` : `${n}`;
+                if (n <= nivelDesbloqueado) {
+                    option.textContent = `NIVEL ${etiquetaNum} (${etiquetaNum} ESTRELLAS)`;
+                } else {
+                    option.textContent = `NIVEL ${etiquetaNum} [BLOQUEADO] 🔒`;
+                    option.disabled = true;
+                }
+                select.appendChild(option);
+            }
+
+            select.value = valorPrevio <= nivelDesbloqueado ? valorPrevio : nivelDesbloqueado;
+            const badge = nivelDesbloqueado < 10 ? `0${nivelDesbloqueado}` : `${nivelDesbloqueado}`;
+            document.getElementById("lbl-nivel-desbloqueado").innerText = `${badge}/10`;
+        }
+
         function iniciarJuego() {
             const input = document.getElementById("input-nombre");
             nombreJugador = (input && input.value.trim() !== "") ? input.value.trim().toUpperCase() : "PROGRAMA_01";
@@ -599,6 +675,7 @@
             document.getElementById("pantalla-inicio").style.display = "none";
             document.getElementById("pantalla-juego").style.display = "block";
             
+            actualizarSelectorNiveles();
             reiniciarPartida();
         }
 
@@ -620,10 +697,18 @@
 
         function reiniciarPartida() {
             detenerAutoResolucion();
-            totalDiscos = parseInt(document.getElementById("disk-count").value);
+            const select = document.getElementById("disk-count");
+            let elegido = parseInt(select.value);
+            if (elegido > nivelDesbloqueado) {
+                elegido = nivelDesbloqueado;
+                select.value = elegido;
+            }
+
+            totalDiscos = elegido;
             torres = [[], [], []];
             historialMovimientos = [];
             juegoTerminado = false;
+            document.getElementById("btn-siguiente-nivel").style.display = "none";
             
             for (let i = totalDiscos; i >= 1; i--) {
                 torres[0].push(i);
@@ -635,7 +720,7 @@
             actualizarEstadoBotonDeshacer();
             document.getElementById("min-movimientos").innerText = Math.pow(2, totalDiscos) - 1;
             
-            mostrarMensaje(`SECUENCIA INICIADA [${totalDiscos} DISCOS]. TRANSFIERE AL NODO C.`, false);
+            mostrarMensaje(`NIVEL 0${totalDiscos === 10 ? '' : ''}${totalDiscos} INICIADO. TRANSFIERE AL NODO C.`, false);
             actualizarInterfaz();
         }
 
@@ -664,7 +749,7 @@
                 const discoDestino = torres[destino].length > 0 ? torres[destino][torres[destino].length - 1] : null;
                 
                 if (discoDestino !== null && discoDestino < discoOrigen) {
-                    mostrarMensaje("VIOLACIÓN DE PROTOCOLO: DISCO MAYOR SOBRE MENOR.", true);
+                    mostrarMensaje("VIOLACIÓN DE PROTOCOLO: ESTRELLA MAYOR SOBRE MENOR.", true);
                     torreSeleccionada = -1;
                 } else {
                     ejecutarMovimiento(origen, destino, true);
@@ -690,9 +775,22 @@
             if (torres[2].length === totalDiscos) {
                 juegoTerminado = true;
                 const minMovs = Math.pow(2, totalDiscos) - 1;
-                const extra = movimientos === minMovs ? " // EFICIENCIA 100%" : "";
-                mostrarMensaje(`SECUENCIA COMPLETADA EN ${movimientos} CICLOS.${extra}`, false, "#00ff88");
-                
+                let mensajeExtra = movimientos === minMovs ? " // EFICIENCIA 100%" : "";
+
+                // Desbloquear el siguiente nivel si acaba de superar su nivel máximo actual
+                if (totalDiscos === nivelDesbloqueado && nivelDesbloqueado < NIVEL_MAXIMO) {
+                    nivelDesbloqueado++;
+                    localStorage.setItem("hanoi_tron_unlocked", nivelDesbloqueado);
+                    actualizarSelectorNiveles();
+                    const sigLabel = nivelDesbloqueado < 10 ? `0${nivelDesbloqueado}` : `${nivelDesbloqueado}`;
+                    mensajeExtra += ` // ¡NIVEL ${sigLabel} DESBLOQUEADO!`;
+                }
+
+                if (totalDiscos < NIVEL_MAXIMO) {
+                    document.getElementById("btn-siguiente-nivel").style.display = "inline-block";
+                }
+
+                mostrarMensaje(`SECUENCIA COMPLETADA EN ${movimientos} CICLOS.${mensajeExtra}`, false, "#00ff88");
                 guardarPuntaje(nombreJugador, totalDiscos, movimientos);
                 document.getElementById("btn-deshacer").disabled = true;
             } else if (!autoResolviendo) {
@@ -702,8 +800,7 @@
         }
 
         /* =====================================================================
-           LÓGICA SECRETA: Resuelve el nivel con un ligero margen extra sobre
-           el mínimo teórico (2^n - 1 + 2, 4 o 6 ciclos extra válidos).
+           BOTÓN SECRETO: Resuelve el nivel actual con 2, 4 o 6 ciclos extra
            ===================================================================== */
         function activarAutoCompletadoSecreto() {
             if (autoResolviendo) return;
@@ -713,7 +810,6 @@
             document.getElementById("disk-count").disabled = true;
             document.getElementById("btn-deshacer").disabled = true;
 
-            // Generar pasos óptimos mediante recursividad
             const pasos = [];
             function generarHanoi(n, origen, auxiliar, destino) {
                 if (n === 0) return;
@@ -723,21 +819,17 @@
             }
             generarHanoi(totalDiscos, 0, 1, 2);
 
-            // Insertar 1, 2 o 3 pares de movimientos extra válidos (ida y vuelta = +2, +4 o +6 ciclos)
             const paresExtra = Math.floor(Math.random() * 3) + 1;
             for (let k = 0; k < paresExtra; k++) {
-                // Elegir un punto aleatorio tras el primer movimiento
                 const idx = Math.floor(Math.random() * (pasos.length - 1)) + 1;
                 const [orig, dest] = pasos[idx];
-                // Repetir ida y vuelta antes de ejecutar el movimiento real mantiene intacto el estado de las torres
                 pasos.splice(idx, 0, [orig, dest], [dest, orig]);
             }
 
-            // Velocidad adaptativa según cantidad de discos para que no tarde demasiado en niveles altos
             const delayMs = totalDiscos <= 4 ? 220 : (totalDiscos <= 6 ? 95 : (totalDiscos <= 8 ? 30 : 8));
             let pasoActual = 0;
 
-            mostrarMensaje("OVERCLOCK ACTIVADO: EJECUTANDO SECUENCIA...", false, "#ff6a00");
+            mostrarMensaje("OVERCLOCK RGB ACTIVADO: EJECUTANDO SECUENCIA...", false, "#ff6a00");
 
             function siguientePaso() {
                 if (!autoResolviendo || pasoActual >= pasos.length) {
@@ -802,28 +894,43 @@
                 el.classList.toggle("active-tower", idx === torreSeleccionada);
             });
 
+            // Escalado dinámico de alto para que 10 estrellas quepan perfectamente sin salirse del tablero
+            const alturaBase = totalDiscos <= 6 ? 34 : (totalDiscos <= 8 ? 29 : 25);
+
             for (let i = 0; i < 3; i++) {
                 const contenedorTorre = document.getElementById(`tower-${i}`);
                 contenedorTorre.innerHTML = '';
                 
                 torres[i].forEach((tamanoDisco, indexDisco) => {
-                    const elementoDisco = document.createElement('div');
-                    elementoDisco.className = 'disk';
+                    const piezaEstrella = document.createElement('div');
+                    piezaEstrella.className = 'star-piece';
                     
-                    const porcentajeAncho = 24 + ((tamanoDisco / totalDiscos) * 68);
-                    const colorNeon = estilosDiscos[tamanoDisco - 1];
-                    
-                    elementoDisco.style.width = `${porcentajeAncho}%`;
-                    elementoDisco.style.border = `2px solid ${colorNeon}`;
-                    elementoDisco.style.color = colorNeon;
-                    elementoDisco.style.boxShadow = `0 0 10px ${colorNeon}, inset 0 0 6px ${colorNeon}`;
-                    elementoDisco.innerText = tamanoDisco < 10 ? `0${tamanoDisco}` : tamanoDisco;
+                    // Ancho proporcional al tamaño de la estrella
+                    const porcentajeAncho = 28 + ((tamanoDisco / totalDiscos) * 66);
+                    piezaEstrella.style.width = `${porcentajeAncho}%`;
+                    piezaEstrella.style.height = `${alturaBase}px`;
+                    // Desfase de animación RGB por cada estrella para efecto onda continua
+                    piezaEstrella.style.animationDelay = `-${tamanoDisco * 0.45}s`;
+
+                    const textoNumero = tamanoDisco < 10 ? `0${tamanoDisco}` : tamanoDisco;
+                    piezaEstrella.innerHTML = `
+                        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <polygon 
+                                points="50,3 63,36 98,38 71,60 79,95 50,76 21,95 29,60 2,38 37,36" 
+                                fill="rgba(0, 243, 255, 0.25)" 
+                                stroke="#00f3ff" 
+                                stroke-width="4" 
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                        <span class="star-num">${textoNumero}</span>
+                    `;
                     
                     if (i === torreSeleccionada && indexDisco === torres[i].length - 1) {
-                        elementoDisco.classList.add('selected');
+                        piezaEstrella.classList.add('selected');
                     }
                     
-                    contenedorTorre.appendChild(elementoDisco);
+                    contenedorTorre.appendChild(piezaEstrella);
                 });
             }
         }
